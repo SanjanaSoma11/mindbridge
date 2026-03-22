@@ -235,9 +235,7 @@ export default function SettingsPage() {
               ✓ Focus areas saved
             </p>
           )}
-          <p className="mt-3 text-[11px] leading-relaxed text-brand-600/45">
-            If you use cloud Supabase without a <code className="rounded bg-brand-200/50 px-1">checkin_interests</code> column yet, focus areas are also kept in this browser until your database is updated.
-          </p>
+
         </div>
       </div>
 

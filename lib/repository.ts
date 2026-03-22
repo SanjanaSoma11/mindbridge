@@ -235,9 +235,7 @@ export async function updateUser(
   if (patch.nudge_shown_at !== undefined)
     row.nudge_shown_at = patch.nudge_shown_at;
   if (patch.full_name !== undefined) row.full_name = patch.full_name;
-  /* checkin_interests: add column `checkin_interests` (jsonb or text[]) on `users` before enabling:
   if (patch.checkin_interests !== undefined) row.checkin_interests = patch.checkin_interests;
-  */
   const { data, error } = await admin()
     .from("users")
     .update(row)
@@ -392,7 +390,7 @@ export async function deleteAllUserData(userId: string): Promise<void> {
 
 export type CronUser = Pick<
   User,
-  "id" | "last_checkin_at" | "frequency_days"
+  "id" | "last_checkin_at" | "frequency_days" | "nudge_shown_at"
 >;
 
 export async function listUsersForCron(): Promise<CronUser[]> {
@@ -401,11 +399,12 @@ export async function listUsersForCron(): Promise<CronUser[]> {
       id: u.id,
       last_checkin_at: u.last_checkin_at,
       frequency_days: u.frequency_days,
+      nudge_shown_at: u.nudge_shown_at,
     }));
   }
   const { data, error } = await admin()
     .from("users")
-    .select("id, last_checkin_at, frequency_days");
+    .select("id, last_checkin_at, frequency_days, nudge_shown_at");
   if (error) throw error;
   return (data ?? []) as CronUser[];
 }

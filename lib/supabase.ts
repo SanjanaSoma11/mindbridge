@@ -24,9 +24,12 @@ export function isSupabaseConfigured(): boolean {
  *   frequency_days integer default 2 check (frequency_days between 1 and 30),
  *   last_checkin_at timestamptz,
  *   nudge_shown_at timestamptz,
- *   full_name text
+ *   full_name text,
+ *   checkin_interests text[]
  * );
- * -- If you already created users: alter table users add column if not exists full_name text;
+ * -- If you already created users:
+ * -- alter table users add column if not exists full_name text;
+ * -- alter table users add column if not exists checkin_interests text[];
  * -- Per-user Google Calendar OAuth (server-only; never expose to client):
  * -- alter table users add column if not exists google_calendar_refresh_token text;
  *
