@@ -95,9 +95,6 @@ export default function ImpactDashboard({
       )}
 
       <div className="surface-card p-5 border-brand-600/30">
-        <h3 className="mb-2 font-display text-base font-semibold tracking-tight text-brand-600">
-          For judges
-        </h3>
         <p className="text-xs text-brand-600/80 leading-relaxed normal-case tracking-normal">
           MindBridge is designed to show{" "}
           <strong>proactive, explainable</strong> support: trends and thresholds

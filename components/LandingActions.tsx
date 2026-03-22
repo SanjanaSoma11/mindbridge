@@ -46,12 +46,6 @@ export default function LandingActions() {
         <strong className="font-semibold text-brand-600">{display}</strong>
       </p>
       <Link
-        href="/patterns?judge=1"
-        className="btn-outline-cocina block rounded-2xl py-3.5 text-center"
-      >
-        Judge demo (90s)
-      </Link>
-      <Link
         href="/check-in"
         className="btn-solid-cocina block rounded-2xl py-3.5 text-center"
       >

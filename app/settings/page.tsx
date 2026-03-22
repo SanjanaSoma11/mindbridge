@@ -333,16 +333,6 @@ export default function SettingsPage() {
           </div>
         )}
       </div>
-
-      <div className="surface-card border-t border-brand-600/10 pt-8 text-xs leading-relaxed text-brand-600/85">
-        <strong className="font-semibold text-brand-600">Production:</strong> Set{" "}
-        <code className="rounded bg-brand-200/60 px-1 text-brand-600">SUPABASE_SERVICE_ROLE_KEY</code>{" "}
-        and{" "}
-        <code className="rounded bg-brand-200/60 px-1 text-brand-600">
-          NEXT_PUBLIC_DEMO_MODE=false
-        </code>{" "}
-        for cloud persistence. See <code className="rounded bg-brand-200/60 px-1 text-brand-600">README.md</code>.
-      </div>
     </div>
   );
 }
