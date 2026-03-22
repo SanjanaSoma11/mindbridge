@@ -10,7 +10,7 @@ import { useMindBridgeUser } from "@/hooks/useMindBridgeUser";
 import { ChatMessage, Checkin, Resource } from "@/types";
 import { getResourcesForTags } from "@/lib/resources";
 
-const WELCOME_MESSAGE: ChatMessage = {
+const FALLBACK_MESSAGE: ChatMessage = {
   role: "assistant",
   content:
     "Hey — glad you're here. How are you doing today? No right answer, just whatever's on your mind.",
@@ -19,7 +19,7 @@ const WELCOME_MESSAGE: ChatMessage = {
 export default function CheckInPage() {
   const { userId, ready, isJudgeDemo, authHeaders, startFreshSession } =
     useMindBridgeUser();
-  const [messages, setMessages] = useState<ChatMessage[]>([WELCOME_MESSAGE]);
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [loading, setLoading] = useState(false);
   const [showCrisis, setShowCrisis] = useState(false);
   const [resources, setResources] = useState<Resource[]>([]);
@@ -29,10 +29,46 @@ export default function CheckInPage() {
     Math.random().toString(36).slice(2) + Date.now().toString(36)
   );
   const bottomRef = useRef<HTMLDivElement>(null);
+  const fetchedInitialRef = useRef(false);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, loading]);
+
+  // Fetch initial prompt on mount
+  useEffect(() => {
+    if (!ready || !userId || fetchedInitialRef.current) return;
+    fetchedInitialRef.current = true;
+
+    async function fetchGreeting() {
+      setLoading(true);
+      try {
+        const res = await fetch("/api/chat/start", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            ...authHeaders(),
+          },
+          body: JSON.stringify({ userId, sessionId }),
+        });
+        
+        const data = await res.json();
+        setMessages([
+          {
+            role: "assistant",
+            content: data.response || FALLBACK_MESSAGE.content,
+          },
+        ]);
+      } catch (err) {
+        console.error("Failed to fetch initial greeting", err);
+        setMessages([FALLBACK_MESSAGE]);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchGreeting();
+  }, [ready, userId, authHeaders, sessionId]);
 
   async function handleSend(text: string) {
     if (!userId) return;

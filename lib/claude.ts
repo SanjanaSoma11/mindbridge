@@ -9,8 +9,10 @@ import {
   buildChatSystemPrompt,
   EXTRACTION_SYSTEM_PROMPT,
   SUMMARY_SYSTEM_PROMPT,
+  DYNAMIC_GREETING_PROMPT,
 } from "./prompts";
 import { detectCrisis } from "./crisis";
+import { getCheckins } from "./repository";
 
 // ─── Mock response logic ──────────────────────────────────────────────────────
 
@@ -227,6 +229,38 @@ export async function generateWeeklySummary(
     .join("\n");
 
   const result = await callGroq(SUMMARY_SYSTEM_PROMPT, [
+    { role: "user", content: userContent },
+  ]);
+
+  return result;
+}
+
+/** Generate a dynamic initial greeting based on the user's history. */
+export async function generateInitialGreeting(userId: string): Promise<string> {
+  const hasApiKey = isGroqConfigured();
+  if (!hasApiKey) {
+    return "Hey — glad you're here. How are you doing today? No right answer, just whatever's on your mind.";
+  }
+
+  // Fetch recent checkins
+  const recentCheckins = await getCheckins(userId);
+  const lastFew = recentCheckins.slice(-3); // Get last 3 checkins
+
+  let historyText = "No recent history.";
+  if (lastFew.length > 0) {
+    historyText = lastFew
+      .map(
+        (c, i) =>
+          `Past Check-in ${i + 1}:\nUser: ${c.user_text}\nMindBridge: ${
+            c.ai_response
+          }`
+      )
+      .join("\n\n");
+  }
+
+  const userContent = `Here is the student's recent check-in history:\n\n${historyText}\n\nGenerate the short opening checking question.`;
+
+  const result = await callGroq(DYNAMIC_GREETING_PROMPT, [
     { role: "user", content: userContent },
   ]);
 
