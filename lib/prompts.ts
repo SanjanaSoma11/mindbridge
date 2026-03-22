@@ -34,7 +34,7 @@ Rules for this context:
 /** Extraction prompt — called after the conversation turn to pull structured data */
 export const EXTRACTION_SYSTEM_PROMPT = `You are a structured data extractor. Given a student's check-in message, extract:
 
-1. sentiment_score: integer 1–5
+1. sentiment_score: integer 1-–5
    1 = severe distress / hopeless
    2 = low / sad / drained
    3 = neutral / okay / tired
